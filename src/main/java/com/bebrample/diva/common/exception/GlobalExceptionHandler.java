@@ -40,4 +40,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, status);
 
     }
+
+    @ExceptionHandler(NotEnoughAuthoritiesException.class)
+    public ResponseEntity<ErrorResponse> HandleNotEnoughAuthorities(Exception e) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        ErrorResponse response = new ErrorResponse(
+                status.value(),
+                status.toString(),
+                e.getMessage()
+        );
+        return new ResponseEntity<>(response, status);
+    }
 }

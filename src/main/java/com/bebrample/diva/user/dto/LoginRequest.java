@@ -1,11 +1,11 @@
-package com.bebrample.diva.user;
+package com.bebrample.diva.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
-@Builder
+
 public record LoginRequest(@NotBlank(message = "must not be empty")
                            @Email
                            String mail,

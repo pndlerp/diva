@@ -9,6 +9,6 @@ public record ErrorResponse(int status,
                             String message) {
 
     public ErrorResponse(int status, String error, String message){
-        this(status, LocalDateTime.now(), message, error);
+        this(status, LocalDateTime.now(), error, message);
     }
 }

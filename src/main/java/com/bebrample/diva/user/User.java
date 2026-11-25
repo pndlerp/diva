@@ -27,7 +27,4 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "member")
-    private List<ServerMember> servers;
-
 }

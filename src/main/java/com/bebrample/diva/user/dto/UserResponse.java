@@ -1,4 +1,4 @@
-package com.bebrample.diva.user;
+package com.bebrample.diva.user.dto;
 
 import lombok.Builder;
 

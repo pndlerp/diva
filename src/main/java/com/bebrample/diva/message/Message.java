@@ -3,10 +3,14 @@ package com.bebrample.diva.message;
 import com.bebrample.diva.user.User;
 import com.bebrample.diva.channel.Channel;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "messages")
 public class Message {
     @Id
@@ -22,4 +26,10 @@ public class Message {
     private Channel channel;
     @Column(name = "date")
     private LocalDateTime localDateTime = LocalDateTime.now();
+
+    public Message(String text, User sender, Channel channel) {
+        this.text = text;
+        this.sender = sender;
+        this.channel = channel;
+    }
 }

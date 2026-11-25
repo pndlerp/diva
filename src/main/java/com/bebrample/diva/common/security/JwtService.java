@@ -19,11 +19,12 @@ public class JwtService {
 
     private final Long expirationDate = 86400000L;
 
-    public String generateToken(String username, String role){
-
+    public String generateToken(CustomUserDetails user){
+        String authority = user.getAuthorities().iterator().next().getAuthority();
         return Jwts.builder()
-                .subject(username)
-                .claim("role", role)
+                .subject(user.getUsername())
+                .claim("userId", user.getId())
+                .claim("role", authority)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationDate))
                 .signWith(secretKey)

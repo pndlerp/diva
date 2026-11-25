@@ -1,6 +1,8 @@
 package com.bebrample.diva.user;
 
+import com.bebrample.diva.common.exception.DuplicateResourcesException;
 import com.bebrample.diva.common.security.CookieService;
+import com.bebrample.diva.common.security.CustomUserDetails;
 import com.bebrample.diva.common.security.JwtService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +23,9 @@ public class AuthService {
     private final CookieService cookieService;
 
     @Transactional
-    public User register(String username, String mail, String password){
-        if(userRepository.existsByMail(mail)) throw new RuntimeException("User with this email already registered");
-        if(userRepository.existsByUsername(username)) throw new RuntimeException("User with this name already registered");
+    public void register(String username, String mail, String password){
+        if(userRepository.existsByMail(mail)) throw new DuplicateResourcesException("User with this email already registered");
+        if(userRepository.existsByUsername(username)) throw new DuplicateResourcesException("User with this name already registered");
 
         String hashedPassword = passwordEncoder.encode(password);
         User user = User.builder()
@@ -33,16 +35,15 @@ public class AuthService {
                 .password(hashedPassword)
                 .build();
 
-        return userRepository.save(user);
-
+        userRepository.save(user);
     }
 
     public ResponseCookie login(String email, String password){
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(email, password));
 
-        String role = authentication.getAuthorities().iterator().next().toString();
-        String token = jwtService.generateToken(authentication.getName(), role);
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String token = jwtService.generateToken(userDetails);
         return cookieService.createCookie(token);
     }
 

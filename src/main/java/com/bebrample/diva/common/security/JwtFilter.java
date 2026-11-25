@@ -40,15 +40,21 @@ public class JwtFilter extends OncePerRequestFilter {
                     Claims claims = jwtService.verifyToken(token);
 
                     String username = claims.getSubject();
-                    String role = claims.get("role", String.class);
 
+                    String role = claims.get("role", String.class);
+                    Long userId = claims.get("userId", Long.class);
                     List<GrantedAuthority> authorityList = AuthorityUtils.createAuthorityList(role);
 
+                    CustomUserDetails customUserDetails = CustomUserDetails.builder()
+                            .id(userId)
+                            .username(username)
+                            .authorities(authorityList)
+                            .build();
                     UsernamePasswordAuthenticationToken auth =
                             new UsernamePasswordAuthenticationToken(
-                                username,
+                                customUserDetails,
                                 null,
-                                authorityList);
+                                customUserDetails.getAuthorities());
 
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
